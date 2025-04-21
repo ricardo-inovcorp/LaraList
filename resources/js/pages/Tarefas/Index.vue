@@ -42,6 +42,15 @@
                     <option value="urgente">Urgente</option>
                   </select>
                 </div>
+
+                <button
+                  @click="limparFiltros"
+                  class="px-4 py-2 text-sm text-gray-100 bg-gray-600 border border-gray-500 rounded-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 h-10"
+                  :class="{ 'opacity-50 cursor-not-allowed': !filtrosAplicados }"
+                  :disabled="!filtrosAplicados"
+                >
+                  Limpar Filtros
+                </button>
               </div>
 
               <div class="flex items-end">
@@ -234,6 +243,25 @@ const ordemAtiva = ref((() => {
     direcao: direcao || 'desc',
   };
 })());
+
+// Verificar se algum filtro está aplicado
+const filtrosAplicados = computed(() => {
+  return filtros.value.estado !== '' || 
+         filtros.value.prioridade !== '' || 
+         filtros.value.categoria !== '' ||
+         (ordemAtiva.value.campo !== 'created_at' || ordemAtiva.value.direcao !== 'desc');
+});
+
+// Limpar todos os filtros
+const limparFiltros = () => {
+  filtros.value.estado = '';
+  filtros.value.prioridade = '';
+  filtros.value.categoria = '';
+  ordemAtiva.value.campo = 'created_at';
+  ordemAtiva.value.direcao = 'desc';
+  
+  filtrarTarefas();
+};
 
 const filtrarTarefas = () => {
   const ordem = `${ordemAtiva.value.campo}_${ordemAtiva.value.direcao}`;
