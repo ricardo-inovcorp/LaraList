@@ -26,7 +26,7 @@ class TarefaRequest extends FormRequest
             'descricao' => 'nullable|string',
             'estado' => 'sometimes|required|in:pendente,em_progresso,concluida,cancelada',
             'prioridade' => 'sometimes|required|in:baixa,media,alta,urgente',
-            'categoria' => 'nullable|string|max:255',
+            'categoria_id' => 'nullable|integer|exists:categorias,id',
             'data_conclusao' => 'nullable|date',
             'concluida' => 'sometimes|boolean',
         ];

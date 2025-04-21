@@ -21,7 +21,7 @@ class Tarefa extends Model
         'descricao',
         'estado',
         'prioridade',
-        'categoria',
+        'categoria_id',
         'data_conclusao',
         'concluida',
     ];
@@ -42,5 +42,13 @@ class Tarefa extends Model
     public function utilizador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'utilizador_id');
+    }
+
+    /**
+     * Obter a categoria a que esta tarefa pertence.
+     */
+    public function categoria(): BelongsTo
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
     }
 }

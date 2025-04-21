@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TarefaRequest;
 use App\Models\Tarefa;
+use App\Models\Categoria;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,8 +48,8 @@ class TarefaController extends Controller
             $query->where('prioridade', $request->prioridade);
         }
         
-        if ($request->filled('categoria')) {
-            $query->where('categoria', $request->categoria);
+        if ($request->filled('categoria_id')) {
+            $query->where('categoria_id', $request->categoria_id);
         }
         
         // Ordenação
@@ -91,7 +92,7 @@ class TarefaController extends Controller
         $filtros = [
             'estado' => $request->estado,
             'prioridade' => $request->prioridade,
-            'categoria' => $request->categoria,
+            'categoria_id' => $request->categoria_id,
             'ordem' => $request->ordem,
         ];
 
@@ -106,6 +107,7 @@ class TarefaController extends Controller
      */
     public function create(): Response
     {
+        // Não precisamos enviar categorias aqui pois serão carregadas via AJAX
         return Inertia::render('Tarefas/Create');
     }
 

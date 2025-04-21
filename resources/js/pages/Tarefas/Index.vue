@@ -4,9 +4,9 @@
   <AppLayout>
     <div class="py-12">
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <h1 class="text-2xl text-white font-bold mb-6">Gestão de Tarefas</h1>
         <div class="overflow-hidden bg-gray-800 shadow-sm sm:rounded-lg">
           <div class="p-6 bg-gray-800 border-b border-gray-700 text-white">
-            <h1 class="text-2xl text-white font-bold mb-6">Gestão de Tarefas</h1>
             
   
             <div class="flex justify-between mb-6">
