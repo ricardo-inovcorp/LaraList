@@ -2,43 +2,66 @@
   <Head title="Nova Tarefa" />
 
   <AppLayout>
-    <div class="py-12">
+    <div class="py-10">
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <h1 class="text-2xl font-bold mb-6 text-white">Nova Tarefa</h1>
-        <div class="overflow-hidden bg-gray-800 shadow-sm sm:rounded-lg">
-          <div class="p-6 bg-gray-800 border-b border-gray-700 text-white">
-            <form @submit.prevent="submeter">
-              <div class="mb-4">
-                <InputLabel for="titulo" value="Título" class="text-white" />
-                <TextInput
-                  id="titulo"
-                  type="text"
-                  class="mt-1 block w-full"
-                  v-model="form.titulo"
-                  required
-                  autofocus
-                />
-                <InputError class="mt-2" :message="form.errors.titulo" />
-              </div>
+        <div class="mb-6">
+          <Link 
+            :href="route('tarefas.index')" 
+            class="inline-flex items-center text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Voltar para tarefas
+          </Link>
+        </div>
 
-              <div class="mb-4">
-                <InputLabel for="descricao" value="Descrição" class="text-white" />
-                <TextArea
-                  id="descricao"
-                  class="mt-1 block w-full"
-                  v-model="form.descricao"
-                  rows="5"
-                />
-                <InputError class="mt-2" :message="form.errors.descricao" />
-              </div>
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg border border-white/10 shadow-lg overflow-hidden">
+          <div class="px-6 py-5 border-b border-white/10">
+            <h2 class="text-xl font-semibold text-white">
+              <span class="bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
+                Nova Tarefa
+              </span>
+            </h2>
+          </div>
 
-              <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="p-6">
+            <form @submit.prevent="form.post(route('tarefas.store'))">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Título -->
+                <div class="col-span-1 md:col-span-2">
+                  <InputLabel for="titulo" value="Título" required />
+                  <TextInput
+                    id="titulo"
+                    type="text"
+                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    v-model="form.titulo"
+                    required
+                    autofocus
+                  />
+                  <InputError class="mt-2" :message="form.errors.titulo" />
+                </div>
+
+                <!-- Descrição -->
+                <div class="col-span-1 md:col-span-2">
+                  <InputLabel for="descricao" value="Descrição" />
+                  <textarea
+                    id="descricao"
+                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    v-model="form.descricao"
+                    rows="4"
+                  ></textarea>
+                  <InputError class="mt-2" :message="form.errors.descricao" />
+                </div>
+
+                <!-- Estado -->
                 <div>
-                  <InputLabel for="estado" value="Estado" class="text-white" />
+                  <InputLabel for="estado" value="Estado" required />
                   <SelectInput
                     id="estado"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
                     v-model="form.estado"
+                    required
                   >
                     <option value="pendente">Pendente</option>
                     <option value="em_progresso">Em Progresso</option>
@@ -48,12 +71,14 @@
                   <InputError class="mt-2" :message="form.errors.estado" />
                 </div>
 
+                <!-- Prioridade -->
                 <div>
-                  <InputLabel for="prioridade" value="Prioridade" class="text-white" />
+                  <InputLabel for="prioridade" value="Prioridade" required />
                   <SelectInput
                     id="prioridade"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
                     v-model="form.prioridade"
+                    required
                   >
                     <option value="baixa">Baixa</option>
                     <option value="media">Média</option>
@@ -62,81 +87,60 @@
                   </SelectInput>
                   <InputError class="mt-2" :message="form.errors.prioridade" />
                 </div>
-              </div>
 
-              <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <!-- Categoria -->
                 <div>
-                  <InputLabel for="categoria" value="Categoria" class="text-white" />
-                  <div class="flex gap-2">
+                  <InputLabel for="categoria_id" value="Categoria" />
+                  <div class="flex space-x-2">
                     <SelectInput
-                      id="categoria"
-                      class="mt-1 flex-grow"
+                      id="categoria_id"
+                      class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
                       v-model="form.categoria_id"
-                      @change="selecionarCategoria"
                     >
-                      <option value="">Selecione uma categoria</option>
+                      <option :value="null">Sem categoria</option>
                       <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
                         {{ categoria.nome }}
                       </option>
-                      <option value="nova">+ Nova Categoria</option>
                     </SelectInput>
+                    <button
+                      type="button"
+                      @click="novaCategoria.modal = true"
+                      class="mt-1 inline-flex items-center justify-center px-3 py-2 bg-indigo-600/30 border border-indigo-500/30 text-indigo-400 rounded-md hover:bg-indigo-600/50 transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
                   </div>
-                  
-                  <!-- Modal para adicionar nova categoria -->
-                  <div v-if="mostraModalNovaCategoria" class="mt-2 p-3 bg-gray-700 rounded-md">
-                    <h3 class="text-white text-sm font-medium mb-2">Nova Categoria</h3>
-                    <div class="mb-2">
-                      <InputLabel for="nova_categoria_nome" value="Nome" class="text-white text-xs" />
-                      <TextInput
-                        id="nova_categoria_nome"
-                        v-model="novaCategoria.nome"
-                        class="mt-1 block w-full"
-                        placeholder="Digite o nome da categoria"
-                      />
-                    </div>
-                    <div class="flex justify-end">
-                      <button 
-                        type="button" 
-                        @click="cancelarNovaCategoria" 
-                        class="px-2 py-1 text-xs text-gray-300 hover:text-white mr-2"
-                      >
-                        Cancelar
-                      </button>
-                      <button 
-                        type="button" 
-                        @click="salvarNovaCategoria" 
-                        class="px-2 py-1 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                        :disabled="!novaCategoria.nome.length"
-                      >
-                        Salvar
-                      </button>
-                    </div>
-                  </div>
-                  
                   <InputError class="mt-2" :message="form.errors.categoria_id" />
                 </div>
 
+                <!-- Data de Conclusão -->
                 <div>
-                  <InputLabel for="data_conclusao" value="Data de Conclusão Prevista" class="text-white" />
+                  <InputLabel for="data_conclusao" value="Data de Conclusão" />
                   <TextInput
                     id="data_conclusao"
                     type="datetime-local"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
                     v-model="form.data_conclusao"
                   />
                   <InputError class="mt-2" :message="form.errors.data_conclusao" />
                 </div>
               </div>
 
-              <div class="flex items-center justify-end mt-6">
+              <div class="flex justify-end mt-6 space-x-3">
                 <Link
                   :href="route('tarefas.index')"
-                  class="px-4 py-2 text-sm text-gray-100 bg-gray-600 border border-gray-500 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  class="inline-flex items-center px-4 py-2 bg-white/5 border border-white/10 rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-white/10 transition ease-in-out duration-150"
                 >
                   Cancelar
                 </Link>
-                <PrimaryButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                  Guardar
+                <PrimaryButton
+                  :class="{ 'opacity-25': form.processing }"
+                  :disabled="form.processing"
+                  class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700"
+                >
+                  Criar Tarefa
                 </PrimaryButton>
               </div>
             </form>
@@ -144,99 +148,113 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Nova Categoria -->
+    <Modal :show="novaCategoria.modal" @close="novaCategoria.modal = false">
+      <div class="p-6 bg-gray-900 rounded-lg backdrop-blur-lg bg-opacity-80 border border-white/10">
+        <h2 class="text-lg font-medium text-white mb-4">Nova Categoria</h2>
+        
+        <div>
+          <InputLabel for="nova_categoria_nome" value="Nome da Categoria" />
+          <TextInput
+            id="nova_categoria_nome"
+            type="text"
+            class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+            v-model="novaCategoria.nome"
+            ref="novaCategoriaInput"
+            @keyup.enter="criarCategoria"
+          />
+          <InputError class="mt-2" :message="novaCategoria.erro" />
+        </div>
+        
+        <div class="flex justify-end mt-6 space-x-3">
+          <SecondaryButton @click="novaCategoria.modal = false">
+            Cancelar
+          </SecondaryButton>
+          <PrimaryButton 
+            @click="criarCategoria"
+            :disabled="novaCategoria.processando"
+            class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700"
+          >
+            Criar
+          </PrimaryButton>
+        </div>
+      </div>
+    </Modal>
   </AppLayout>
 </template>
 
 <script setup>
+import { ref, nextTick, watch } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import AppLayout from '@/layouts/AppLayout.vue';
 import InputLabel from '@/components/InputLabel.vue';
 import TextInput from '@/components/TextInput.vue';
-import TextArea from '@/components/TextArea.vue';
 import SelectInput from '@/components/SelectInput.vue';
 import InputError from '@/components/InputError.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
+import SecondaryButton from '@/components/SecondaryButton.vue';
+import Modal from '@/components/Modal.vue';
+import axios from 'axios';
 
-// Lista de categorias carregadas do servidor
-const categorias = ref([]);
-
-// Estados para gerenciar a criação de nova categoria
-const mostraModalNovaCategoria = ref(false);
-const novaCategoria = ref({
-  nome: '',
-  cor: ''
+const props = defineProps({
+  categorias: Array,
 });
 
-// Formulário principal da tarefa
+// Form para criação da tarefa
 const form = useForm({
   titulo: '',
   descricao: '',
   estado: 'pendente',
   prioridade: 'media',
-  categoria_id: '',
+  categoria_id: null,
   data_conclusao: '',
 });
 
-// Carrega as categorias ao iniciar o componente
-onMounted(async () => {
-  await carregarCategorias();
+// Form para nova categoria
+const novaCategoriaInput = ref(null);
+const novaCategoria = ref({
+  modal: false,
+  nome: '',
+  erro: '',
+  processando: false,
 });
 
-// Função para carregar as categorias do servidor
-const carregarCategorias = async () => {
-  try {
-    const response = await axios.get(route('categorias.index'));
-    categorias.value = response.data;
-  } catch (error) {
-    console.error('Erro ao carregar categorias:', error);
+// Método para criar nova categoria
+const criarCategoria = async () => {
+  if (!novaCategoria.value.nome.trim()) {
+    novaCategoria.value.erro = 'O nome da categoria é obrigatório';
+    return;
   }
-};
 
-// Função chamada quando uma categoria é selecionada
-const selecionarCategoria = () => {
-  if (form.categoria_id === 'nova') {
-    mostraModalNovaCategoria.value = true;
-    form.categoria_id = ''; // Limpa o valor para não ficar "nova" no select
-  }
-};
+  novaCategoria.value.processando = true;
+  novaCategoria.value.erro = '';
 
-// Cancela a criação de nova categoria
-const cancelarNovaCategoria = () => {
-  mostraModalNovaCategoria.value = false;
-  novaCategoria.value.nome = '';
-};
-
-// Salva uma nova categoria
-const salvarNovaCategoria = async () => {
   try {
-    const response = await axios.post(route('categorias.store'), {
-      nome: novaCategoria.value.nome,
-      cor: novaCategoria.value.cor
+    const response = await axios.post(route('api.categorias.store'), {
+      nome: novaCategoria.value.nome
     });
+
+    // Adicionar a nova categoria à lista e selecionar
+    props.categorias.push(response.data);
+    form.categoria_id = response.data.id;
     
-    // Adiciona a nova categoria à lista
-    const novaCategoriaCriada = response.data;
-    categorias.value.push(novaCategoriaCriada);
-    
-    // Seleciona a categoria recém-criada
-    form.categoria_id = novaCategoriaCriada.id;
-    
-    // Fecha o modal e limpa o formulário
-    mostraModalNovaCategoria.value = false;
+    // Fechar modal e limpar
+    novaCategoria.value.modal = false;
     novaCategoria.value.nome = '';
   } catch (error) {
-    console.error('Erro ao criar categoria:', error);
-    if (error.response && error.response.data && error.response.data.errors) {
-      // Aqui poderia mostrar os erros de validação
-      console.error('Erros de validação:', error.response.data.errors);
-    }
+    novaCategoria.value.erro = error.response?.data?.message || 'Erro ao criar categoria';
+  } finally {
+    novaCategoria.value.processando = false;
   }
 };
 
-// Submeter o formulário principal
-const submeter = () => {
-  form.post(route('tarefas.store'));
-};
+// Foco no input de nova categoria quando o modal abrir
+watch(() => novaCategoria.value.modal, (value) => {
+  if (value) {
+    nextTick(() => {
+      novaCategoriaInput.value.focus();
+    });
+  }
+});
 </script> 

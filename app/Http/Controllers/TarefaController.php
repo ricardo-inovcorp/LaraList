@@ -37,7 +37,17 @@ class TarefaController extends Controller
         
         // Query básica - sem tentar acessar relação tarefas diretamente
         $query = Tarefa::query()
-            ->where('utilizador_id', $user->id);
+            ->where('utilizador_id', $user->id)
+            ->with('categoria'); // Carrega a relação de categoria
+        
+        // Busca por título ou descrição
+        if ($request->filled('busca')) {
+            $busca = $request->busca;
+            $query->where(function($q) use ($busca) {
+                $q->where('titulo', 'like', "%{$busca}%")
+                  ->orWhere('descricao', 'like', "%{$busca}%");
+            });
+        }
         
         // Filtragem
         if ($request->filled('estado')) {
@@ -88,17 +98,21 @@ class TarefaController extends Controller
         // Log do número de resultados para debug
         Log::info('Número de tarefas: ' . $tarefas->count());
         
+        // Busca todas as categorias do usuário para o filtro
+        $categorias = Categoria::where('utilizador_id', $user->id)->get();
+        
         // Filtros para a view
-        $filtros = [
+        $filtrosAtivos = [
             'estado' => $request->estado,
             'prioridade' => $request->prioridade,
             'categoria_id' => $request->categoria_id,
-            'ordem' => $request->ordem,
+            'busca' => $request->busca,
         ];
 
         return Inertia::render('Tarefas/Index', [
             'tarefas' => $tarefas,
-            'filtros' => $filtros,
+            'categorias' => $categorias,
+            'filtrosAtivos' => $filtrosAtivos,
         ]);
     }
 
@@ -107,8 +121,12 @@ class TarefaController extends Controller
      */
     public function create(): Response
     {
-        // Não precisamos enviar categorias aqui pois serão carregadas via AJAX
-        return Inertia::render('Tarefas/Create');
+        // Busca todas as categorias do usuário para o form
+        $categorias = Categoria::where('utilizador_id', Auth::id())->get();
+        
+        return Inertia::render('Tarefas/Create', [
+            'categorias' => $categorias,
+        ]);
     }
 
     /**
@@ -132,6 +150,9 @@ class TarefaController extends Controller
     {
         $this->authorize('view', $tarefa);
         
+        // Carrega a relação de categoria
+        $tarefa->load('categoria');
+        
         return Inertia::render('Tarefas/Show', [
             'tarefa' => $tarefa,
         ]);
@@ -144,8 +165,15 @@ class TarefaController extends Controller
     {
         $this->authorize('update', $tarefa);
         
+        // Carrega a relação de categoria
+        $tarefa->load('categoria');
+        
+        // Busca todas as categorias do usuário para o form
+        $categorias = Categoria::where('utilizador_id', Auth::id())->get();
+        
         return Inertia::render('Tarefas/Edit', [
             'tarefa' => $tarefa,
+            'categorias' => $categorias,
         ]);
     }
 

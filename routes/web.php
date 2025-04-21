@@ -23,6 +23,9 @@ Route::middleware('auth')->group(function () {
     // Rotas para categorias
     Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
     Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
+    
+    // API para categorias
+    Route::post('/api/categorias', [CategoriaController::class, 'store'])->name('api.categorias.store');
 });
 
 require __DIR__.'/settings.php';
