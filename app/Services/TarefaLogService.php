@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Models\Tarefa;
 use App\Models\TarefaLog;
+use App\Models\User;
+use App\Notifications\TarefaAtividadeNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class TarefaLogService
 {
@@ -16,7 +19,7 @@ class TarefaLogService
      */
     public function registrarCriacao(Tarefa $tarefa): TarefaLog
     {
-        return $this->registrarLog(
+        $log = $this->registrarLog(
             $tarefa,
             'criar',
             null,
@@ -24,6 +27,11 @@ class TarefaLogService
             null,
             'Tarefa criada'
         );
+
+        // Enviar notificação por email
+        $this->enviarNotificacaoEmail($log, $tarefa);
+
+        return $log;
     }
 
     /**
@@ -50,7 +58,7 @@ class TarefaLogService
             $descricao = $this->formatarDescricaoMudanca($campo, $valorAnterior, $novoValor);
             
             // Registrar a mudança
-            $logs[] = $this->registrarLog(
+            $log = $this->registrarLog(
                 $tarefa,
                 'atualizar',
                 $campo,
@@ -58,6 +66,11 @@ class TarefaLogService
                 $novoValor,
                 $descricao
             );
+            
+            $logs[] = $log;
+            
+            // Enviar notificação por email para cada mudança
+            $this->enviarNotificacaoEmail($log, $tarefa);
         }
 
         return $logs;
@@ -75,7 +88,7 @@ class TarefaLogService
     {
         $descricao = "Estado alterado de '{$estadoAnterior}' para '{$novoEstado}'";
         
-        return $this->registrarLog(
+        $log = $this->registrarLog(
             $tarefa,
             'estado',
             'estado',
@@ -83,6 +96,11 @@ class TarefaLogService
             $novoEstado,
             $descricao
         );
+        
+        // Enviar notificação por email
+        $this->enviarNotificacaoEmail($log, $tarefa);
+        
+        return $log;
     }
 
     /**
@@ -93,7 +111,7 @@ class TarefaLogService
      */
     public function registrarExclusao(Tarefa $tarefa): TarefaLog
     {
-        return $this->registrarLog(
+        $log = $this->registrarLog(
             $tarefa,
             'excluir',
             null,
@@ -101,6 +119,11 @@ class TarefaLogService
             null,
             'Tarefa excluída'
         );
+        
+        // Enviar notificação por email
+        $this->enviarNotificacaoEmail($log, $tarefa);
+        
+        return $log;
     }
 
     /**
@@ -190,5 +213,24 @@ class TarefaLogService
         }
 
         return (string) $valor;
+    }
+
+    /**
+     * Enviar notificação por email para o usuário dono da tarefa.
+     *
+     * @param TarefaLog $log O log da atividade
+     * @param Tarefa $tarefa A tarefa relacionada
+     * @return void
+     */
+    protected function enviarNotificacaoEmail(TarefaLog $log, Tarefa $tarefa): void
+    {
+        // Obter o usuário dono da tarefa
+        $usuario = User::find($tarefa->utilizador_id);
+        
+        if ($usuario) {
+            // Enviar a notificação imediatamente
+            $notificacao = new TarefaAtividadeNotification($log, $tarefa);
+            Notification::send($usuario, $notificacao);
+        }
     }
 } 

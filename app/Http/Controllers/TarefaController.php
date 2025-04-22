@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TarefaRequest;
 use App\Models\Tarefa;
 use App\Models\Categoria;
+use App\Models\TarefaLog;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Services\TarefaLogService;
+use App\Notifications\TarefaAtividadeNotification;
+use Illuminate\Support\Facades\Notification;
 
 class TarefaController extends Controller
 {
