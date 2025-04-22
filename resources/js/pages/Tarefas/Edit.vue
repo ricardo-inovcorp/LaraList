@@ -16,9 +16,9 @@
           </Link>
         </div>
 
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg border border-white/10 shadow-lg overflow-hidden">
-          <div class="px-6 py-5 border-b border-white/10 flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-white">
+        <div class="backdrop-blur-lg bg-white/90 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 shadow-lg overflow-hidden">
+          <div class="px-6 py-5 border-b border-gray-200 dark:border-white/10 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
               <span class="bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
                 Editar Tarefa
               </span>
@@ -27,7 +27,7 @@
               <button 
                 v-if="form.estado !== 'concluida'" 
                 @click="marcarConcluida"
-                class="flex items-center px-3 py-1.5 text-xs font-medium text-green-400 bg-green-500/10 rounded-md hover:bg-green-500/20 transition-colors"
+                class="flex items-center px-3 py-1.5 text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 rounded-md hover:bg-green-100 dark:hover:bg-green-500/20 transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -37,7 +37,7 @@
               <button 
                 v-else 
                 @click="marcarPendente"
-                class="flex items-center px-3 py-1.5 text-xs font-medium text-yellow-400 bg-yellow-500/10 rounded-md hover:bg-yellow-500/20 transition-colors"
+                class="flex items-center px-3 py-1.5 text-xs font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-500/10 border border-yellow-200 dark:border-yellow-500/30 rounded-md hover:bg-yellow-100 dark:hover:bg-yellow-500/20 transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -47,7 +47,7 @@
               <button 
                 v-if="form.estado !== 'cancelada'" 
                 @click="marcarCancelada"
-                class="flex items-center px-3 py-1.5 text-xs font-medium text-red-400 bg-red-500/10 rounded-md hover:bg-red-500/20 transition-colors"
+                class="flex items-center px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-md hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
@@ -62,11 +62,11 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Título -->
                 <div class="col-span-1 md:col-span-2">
-                  <InputLabel for="titulo" value="Título" required />
+                  <InputLabel for="titulo" value="Título" class="text-gray-900 dark:text-white" required />
                   <TextInput
                     id="titulo"
                     type="text"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.titulo"
                     required
                     autofocus
@@ -76,10 +76,10 @@
 
                 <!-- Descrição -->
                 <div class="col-span-1 md:col-span-2">
-                  <InputLabel for="descricao" value="Descrição" />
+                  <InputLabel for="descricao" value="Descrição" class="text-gray-900 dark:text-white"/>
                   <textarea
                     id="descricao"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.descricao"
                     rows="4"
                   ></textarea>
@@ -88,10 +88,10 @@
 
                 <!-- Estado -->
                 <div>
-                  <InputLabel for="estado" value="Estado" required />
+                  <InputLabel for="estado" value="Estado" class="text-gray-900 dark:text-white" required />
                   <SelectInput
                     id="estado"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.estado"
                     required
                   >
@@ -105,10 +105,10 @@
 
                 <!-- Prioridade -->
                 <div>
-                  <InputLabel for="prioridade" value="Prioridade" required />
+                  <InputLabel for="prioridade" value="Prioridade" class="text-gray-900 dark:text-white" required />
                   <SelectInput
                     id="prioridade"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.prioridade"
                     required
                   >
@@ -122,11 +122,11 @@
 
                 <!-- Categoria -->
                 <div>
-                  <InputLabel for="categoria_id" value="Categoria" />
+                  <InputLabel for="categoria_id" value="Categoria" class="text-gray-900 dark:text-white" />
                   <div class="flex space-x-2">
                     <SelectInput
                       id="categoria_id"
-                      class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                      class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                       v-model="form.categoria_id"
                     >
                       <option :value="null">Sem categoria</option>
@@ -137,7 +137,7 @@
                     <button
                       type="button"
                       @click="novaCategoria.modal = true"
-                      class="mt-1 inline-flex items-center justify-center px-3 py-2 bg-indigo-600/30 border border-indigo-500/30 text-indigo-400 rounded-md hover:bg-indigo-600/50 transition-colors"
+                      class="mt-1 inline-flex items-center justify-center px-3 py-2 bg-indigo-50 dark:bg-indigo-600/30 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-md hover:bg-indigo-100 dark:hover:bg-indigo-600/50 transition-colors"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
@@ -149,11 +149,11 @@
 
                 <!-- Data de Conclusão -->
                 <div>
-                  <InputLabel for="data_conclusao" value="Data de Conclusão" />
+                  <InputLabel for="data_conclusao" value="Data de Conclusão" class="text-gray-900 dark:text-white" />
                   <TextInput
                     id="data_conclusao"
                     type="datetime-local"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.data_conclusao"
                   />
                   <InputError class="mt-2" :message="form.errors.data_conclusao" />
@@ -163,7 +163,7 @@
               <div class="flex justify-end mt-6 space-x-3">
                 <Link
                   :href="route('tarefas.index')"
-                  class="inline-flex items-center px-4 py-2 bg-white/5 border border-white/10 rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-white/10 transition ease-in-out duration-150"
+                  class="inline-flex items-center px-4 py-2 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-md font-semibold text-xs text-gray-700 dark:text-white uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/10 transition ease-in-out duration-150"
                 >
                   Cancelar
                 </Link>
@@ -183,15 +183,15 @@
 
     <!-- Modal Nova Categoria -->
     <Modal :show="novaCategoria.modal" @close="novaCategoria.modal = false">
-      <div class="p-6 bg-gray-900 rounded-lg backdrop-blur-lg bg-opacity-80 border border-white/10">
-        <h2 class="text-lg font-medium text-white mb-4">Nova Categoria</h2>
+      <div class="p-6 bg-white dark:bg-gray-900 rounded-lg backdrop-blur-lg bg-opacity-80 border border-gray-200 dark:border-white/10">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 tracking-tight">Nova Categoria</h2>
         
         <div>
-          <InputLabel for="nova_categoria_nome" value="Nome da Categoria" />
+          <InputLabel for="nova_categoria_nome" value="Nome da Categoria" class="text-gray-900 dark:text-white" />
           <TextInput
             id="nova_categoria_nome"
             type="text"
-            class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+            class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
             v-model="novaCategoria.nome"
             ref="novaCategoriaInput"
             @keyup.enter="criarCategoria"
@@ -241,7 +241,7 @@ const form = useForm({
   estado: props.tarefa.estado,
   prioridade: props.tarefa.prioridade,
   categoria_id: props.tarefa.categoria_id,
-  data_conclusao: props.tarefa.data_conclusao,
+  data_conclusao: formatarDataParaInput(props.tarefa.data_conclusao),
 });
 
 // Form para nova categoria
@@ -252,6 +252,27 @@ const novaCategoria = ref({
   erro: '',
   processando: false,
 });
+
+// Função para formatar a data para o formato aceito pelo input datetime-local
+function formatarDataParaInput(dataString) {
+  if (!dataString) return '';
+  
+  // Converter a string de data para um objeto Date
+  const data = new Date(dataString);
+  
+  // Verificar se a data é válida
+  if (isNaN(data.getTime())) return '';
+  
+  // Formatar no padrão YYYY-MM-DDThh:mm (formato aceito pelo input datetime-local)
+  // padStart adiciona zeros à esquerda quando necessário
+  const ano = data.getFullYear();
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const dia = String(data.getDate()).padStart(2, '0');
+  const hora = String(data.getHours()).padStart(2, '0');
+  const minuto = String(data.getMinutes()).padStart(2, '0');
+  
+  return `${ano}-${mes}-${dia}T${hora}:${minuto}`;
+}
 
 // Método para submeter o formulário
 const submitForm = () => {

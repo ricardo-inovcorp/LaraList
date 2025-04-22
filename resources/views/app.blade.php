@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"  @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+        {{-- Inline script to detect and apply theme --}}
         <script>
             (function() {
-                const appearance = '{{ $appearance ?? "system" }}';
+                // Busca o tema salvo ou usa o padrão do sistema
+                const savedTheme = localStorage.getItem('appearance') || 'system';
+                let isDark = false;
 
-                if (appearance === 'system') {
+                if (savedTheme === 'dark') {
+                    isDark = true;
+                } else if (savedTheme === 'system') {
                     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    isDark = prefersDark;
+                }
 
-                    if (prefersDark) {
-                        document.documentElement.classList.add('dark');
-                    }
+                // Aplica o tema
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
                 }
             })();
         </script>
@@ -33,7 +41,9 @@
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
         @routes
         @vite(['resources/js/app.ts'])

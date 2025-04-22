@@ -9,7 +9,7 @@
 
 @theme inline {
   --font-sans:
-    Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   --radius-lg: var(--radius);
@@ -82,7 +82,7 @@
   body,
   html {
     --font-sans:
-      'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+      'Poppins', ui-sans-serif, system-ui, sans-serif,
       'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
       'Noto Color Emoji';
   }
@@ -165,11 +165,68 @@
 
 @layer base {
     * {
-        @apply border-border;
+        @apply border-border outline-ring/50;
     }
 
     body {
         @apply bg-background text-foreground;
+    }
+
+    /* Estilos de tipografia para Poppins */
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-bold tracking-tight;
+    }
+
+    h1 {
+        @apply text-3xl font-extrabold;
+    }
+
+    h2 {
+        @apply text-2xl font-bold;
+    }
+
+    h3 {
+        @apply text-xl font-semibold;
+    }
+
+    /* Ajusta o peso da fonte para o texto normal */
+    p, span, div {
+        @apply font-normal;
+    }
+
+    /* Ajusta o texto de badges/tags para melhor visualização */
+    .inline-flex.items-center.rounded-full, 
+    .inline-flex.items-center.rounded-md {
+        @apply font-medium tracking-wide;
+    }
+
+    /* Botões com fonte mais legível */
+    button, .button, a[role="button"] {
+        @apply font-medium tracking-wide;
+    }
+
+    /* Melhoria para contraste de placeholders */
+    ::placeholder {
+        @apply text-gray-500 dark:text-gray-400 font-light;
+        opacity: 1; /* Firefox */
+    }
+    
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        @apply text-gray-500 dark:text-gray-400 font-light;
+    }
+    
+    ::-ms-input-placeholder { /* Microsoft Edge */
+        @apply text-gray-500 dark:text-gray-400 font-light;
+    }
+
+    /* Estilo de letra para labels de formulário */
+    label {
+        @apply font-medium;
+    }
+
+    /* Ajusta espaçamento de letras em títulos de seção */
+    .text-lg.font-medium, .text-xl.font-semibold {
+        @apply tracking-tight;
     }
 }
 

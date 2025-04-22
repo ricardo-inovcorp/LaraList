@@ -16,13 +16,14 @@
           </Link>
         </div>
 
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg border border-white/10 shadow-lg overflow-hidden">
-          <div class="px-6 py-5 border-b border-white/10">
-            <h2 class="text-xl font-semibold text-white">
+        <div class="backdrop-blur-lg bg-white/90 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 shadow-lg overflow-hidden">
+          <div class="px-6 py-5 border-b border-gray-200 dark:border-white/10">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
               <span class="bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
                 Nova Tarefa
               </span>
             </h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Crie uma nova tarefa e organize seu trabalho.</p>
           </div>
 
           <div class="p-6">
@@ -34,7 +35,7 @@
                   <TextInput
                     id="titulo"
                     type="text"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.titulo"
                     required
                     autofocus
@@ -47,7 +48,7 @@
                   <InputLabel for="descricao" value="Descrição" />
                   <textarea
                     id="descricao"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.descricao"
                     rows="4"
                   ></textarea>
@@ -59,7 +60,7 @@
                   <InputLabel for="estado" value="Estado" required />
                   <SelectInput
                     id="estado"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.estado"
                     required
                   >
@@ -76,7 +77,7 @@
                   <InputLabel for="prioridade" value="Prioridade" required />
                   <SelectInput
                     id="prioridade"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.prioridade"
                     required
                   >
@@ -94,7 +95,7 @@
                   <div class="flex space-x-2">
                     <SelectInput
                       id="categoria_id"
-                      class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                      class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                       v-model="form.categoria_id"
                     >
                       <option :value="null">Sem categoria</option>
@@ -105,7 +106,7 @@
                     <button
                       type="button"
                       @click="novaCategoria.modal = true"
-                      class="mt-1 inline-flex items-center justify-center px-3 py-2 bg-indigo-600/30 border border-indigo-500/30 text-indigo-400 rounded-md hover:bg-indigo-600/50 transition-colors"
+                      class="mt-1 inline-flex items-center justify-center px-3 py-2 bg-indigo-50 dark:bg-indigo-600/30 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-md hover:bg-indigo-100 dark:hover:bg-indigo-600/50 transition-colors"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
@@ -121,7 +122,7 @@
                   <TextInput
                     id="data_conclusao"
                     type="datetime-local"
-                    class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+                    class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
                     v-model="form.data_conclusao"
                   />
                   <InputError class="mt-2" :message="form.errors.data_conclusao" />
@@ -131,7 +132,7 @@
               <div class="flex justify-end mt-6 space-x-3">
                 <Link
                   :href="route('tarefas.index')"
-                  class="inline-flex items-center px-4 py-2 bg-white/5 border border-white/10 rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-white/10 transition ease-in-out duration-150"
+                  class="inline-flex items-center px-4 py-2 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-md font-semibold text-xs text-gray-700 dark:text-white uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/10 transition ease-in-out duration-150"
                 >
                   Cancelar
                 </Link>
@@ -151,15 +152,16 @@
 
     <!-- Modal Nova Categoria -->
     <Modal :show="novaCategoria.modal" @close="novaCategoria.modal = false">
-      <div class="p-6 bg-gray-900 rounded-lg backdrop-blur-lg bg-opacity-80 border border-white/10">
-        <h2 class="text-lg font-medium text-white mb-4">Nova Categoria</h2>
+      <div class="p-6 bg-white dark:bg-gray-900 rounded-lg backdrop-blur-lg bg-opacity-80 border border-gray-200 dark:border-white/10">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 tracking-tight">Adicionar Nova Categoria</h2>
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Adicione uma nova categoria para melhor organizar suas tarefas.</p>
         
         <div>
           <InputLabel for="nova_categoria_nome" value="Nome da Categoria" />
           <TextInput
             id="nova_categoria_nome"
             type="text"
-            class="mt-1 block w-full bg-white/5 border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-white"
+            class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
             v-model="novaCategoria.nome"
             ref="novaCategoriaInput"
             @keyup.enter="criarCategoria"

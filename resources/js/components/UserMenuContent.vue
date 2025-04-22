@@ -3,7 +3,8 @@ import UserInfo from '@/components/UserInfo.vue';
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { User } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { LogOut, Settings } from 'lucide-vue-next';
+import { LogOut, Settings, PaintBucket } from 'lucide-vue-next';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 
 interface Props {
     user: User;
@@ -19,6 +20,19 @@ defineProps<Props>();
         </div>
     </DropdownMenuLabel>
     <DropdownMenuSeparator />
+    
+    <!-- Tema -->
+    <DropdownMenuGroup>
+        <div class="flex items-center justify-between px-2 py-1.5">
+            <div class="flex items-center">
+                <PaintBucket class="mr-2 h-4 w-4" />
+                <span class="text-sm">Tema</span>
+            </div>
+            <ThemeToggle />
+        </div>
+    </DropdownMenuGroup>
+    <DropdownMenuSeparator />
+    
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full" :href="route('profile.edit')" as="button">

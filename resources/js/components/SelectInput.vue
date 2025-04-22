@@ -1,6 +1,6 @@
 <template>
   <select
-    class="border-gray-400 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-white h-10 bg-gray-700"
+    class="border-gray-300 dark:border-gray-400 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-gray-900 dark:text-white h-10 bg-white dark:bg-gray-700"
     :value="modelValue"
     @change="$emit('update:modelValue', $event.target.value)"
     ref="input"
