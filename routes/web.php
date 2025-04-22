@@ -4,6 +4,7 @@ use App\Http\Controllers\TarefaController;
 use App\Http\Controllers\CategoriaController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -26,6 +27,12 @@ Route::middleware('auth')->group(function () {
     
     // API para categorias
     Route::post('/api/categorias', [CategoriaController::class, 'store'])->name('api.categorias.store');
+
+    // Rota para o dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Rota para API de estatísticas do dashboard
+    Route::get('/api/dashboard/stats', [DashboardController::class, 'stats'])->name('api.dashboard.stats');
 });
 
 require __DIR__.'/settings.php';
