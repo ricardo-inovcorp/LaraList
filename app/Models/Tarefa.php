@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tarefa extends Model
 {
@@ -50,5 +51,13 @@ class Tarefa extends Model
     public function categoria(): BelongsTo
     {
         return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
+
+    /**
+     * Obter os logs de atividades relacionados a esta tarefa.
+     */
+    public function logs(): HasMany
+    {
+        return $this->hasMany(TarefaLog::class);
     }
 }

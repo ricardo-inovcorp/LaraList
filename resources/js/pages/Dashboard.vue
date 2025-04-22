@@ -64,6 +64,11 @@ const tendenciaData = ref({
     backgroundColor: 'rgba(59, 130, 246, 0.5)',
     data: []
   }, {
+    label: 'Tarefas em progresso',
+    borderColor: 'rgb(234, 179, 8)',
+    backgroundColor: 'rgba(234, 179, 8, 0.5)',
+    data: []
+  }, {
     label: 'Tarefas concluídas', 
     borderColor: 'rgb(34, 197, 94)',
     backgroundColor: 'rgba(34, 197, 94, 0.5)',
@@ -265,7 +270,8 @@ async function carregarDados() {
     // Processa dados de tendência
     tendenciaData.value.labels = data.tendencia.map(t => t.data);
     tendenciaData.value.datasets[0].data = data.tendencia.map(t => t.pendentes);
-    tendenciaData.value.datasets[1].data = data.tendencia.map(t => t.concluidas);
+    tendenciaData.value.datasets[1].data = data.tendencia.map(t => t.em_progresso || 0);
+    tendenciaData.value.datasets[2].data = data.tendencia.map(t => t.concluidas);
 
     // Tarefas recentes
     tarefas.value.recentesData.labels = data.recentes.map(t => t.data);

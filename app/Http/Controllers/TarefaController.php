@@ -12,17 +12,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\TarefaLogService;
 
 class TarefaController extends Controller
 {
     use AuthorizesRequests;
 
     /**
+     * Serviço de log de atividades.
+     */
+    protected TarefaLogService $logService;
+
+    /**
      * Construtor do controlador.
      */
-    public function __construct()
+    public function __construct(TarefaLogService $logService)
     {
-        $this->middleware(['auth']); // Removido o middleware verified para testes
+        $this->middleware('auth');
+        $this->logService = $logService;
     }
 
     /**
@@ -137,7 +144,10 @@ class TarefaController extends Controller
         $data = $request->validated();
         $data['utilizador_id'] = Auth::id();
         
-        Tarefa::create($data);
+        $tarefa = Tarefa::create($data);
+        
+        // Registrar log de criação
+        $this->logService->registrarCriacao($tarefa);
 
         return redirect()->route('tarefas.index')
             ->with('mensagem', 'Tarefa criada com sucesso!');
@@ -150,11 +160,12 @@ class TarefaController extends Controller
     {
         $this->authorize('view', $tarefa);
         
-        // Carrega a relação de categoria
-        $tarefa->load('categoria');
+        // Carrega a relação de categoria e logs
+        $tarefa->load(['categoria', 'logs.utilizador']);
         
         return Inertia::render('Tarefas/Show', [
             'tarefa' => $tarefa,
+            'logs' => $tarefa->logs()->with('utilizador')->orderBy('created_at', 'desc')->get(),
         ]);
     }
 
@@ -184,7 +195,16 @@ class TarefaController extends Controller
     {
         $this->authorize('update', $tarefa);
         
+        // Capturar valores originais
+        $originalValues = $tarefa->getAttributes();
+        
         $tarefa->update($request->validated());
+        
+        // Registrar logs de atualização
+        $changes = array_diff_assoc($tarefa->getAttributes(), $originalValues);
+        if (!empty($changes)) {
+            $this->logService->registrarAtualizacao($tarefa, $originalValues, $changes);
+        }
 
         return redirect()->route('tarefas.index')
             ->with('mensagem', 'Tarefa atualizada com sucesso!');
@@ -197,10 +217,16 @@ class TarefaController extends Controller
     {
         $this->authorize('update', $tarefa);
         
+        $estadoAnterior = $tarefa->estado;
+        $novoEstado = $tarefa->concluida ? 'pendente' : 'concluida';
+        
         $tarefa->update([
             'concluida' => !$tarefa->concluida,
-            'estado' => $tarefa->concluida ? 'pendente' : 'concluida',
+            'estado' => $novoEstado,
         ]);
+        
+        // Registrar log de mudança de estado
+        $this->logService->registrarMudancaEstado($tarefa, $estadoAnterior, $novoEstado);
 
         return back()->with('mensagem', 'Estado da tarefa alterado com sucesso!');
     }
@@ -211,6 +237,9 @@ class TarefaController extends Controller
     public function destroy(Tarefa $tarefa): RedirectResponse
     {
         $this->authorize('delete', $tarefa);
+        
+        // Registrar log de exclusão
+        $this->logService->registrarExclusao($tarefa);
         
         $tarefa->delete();
 

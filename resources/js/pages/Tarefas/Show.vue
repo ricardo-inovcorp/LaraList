@@ -94,6 +94,61 @@
                 </div>
               </div>
             </div>
+
+            <!-- Histórico de Atividades -->
+            <div class="p-6 bg-white dark:bg-black/20">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 tracking-tight">Histórico de Atividades</h3>
+              
+              <div v-if="logs.length === 0" class="text-gray-500 dark:text-gray-400 text-center py-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p>Nenhuma atividade registrada</p>
+              </div>
+              
+              <ul v-else class="divide-y divide-gray-200 dark:divide-gray-700">
+                <li v-for="log in logs" :key="log.id" class="py-3">
+                  <div class="flex items-start">
+                    <div class="mr-3 mt-1">
+                      <!-- Ícone baseado no tipo de ação -->
+                      <span v-if="log.tipo_acao === 'criar'" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      <span v-else-if="log.tipo_acao === 'atualizar'" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                      </span>
+                      <span v-else-if="log.tipo_acao === 'estado'" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      <span v-else-if="log.tipo_acao === 'excluir'" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex items-center justify-between mb-1">
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">
+                          {{ log.descricao }}
+                        </p>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                          {{ formatDate(log.created_at) }}
+                        </span>
+                      </div>
+                      <p class="text-xs text-gray-600 dark:text-gray-400">
+                        por {{ log.utilizador ? log.utilizador.name : 'Sistema' }}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -134,6 +189,7 @@ import moment from 'moment';
 
 const props = defineProps({
   tarefa: Object,
+  logs: Array,
 });
 
 // Modal de confirmação

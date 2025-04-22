@@ -31,7 +31,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Título -->
                 <div class="col-span-1 md:col-span-2">
-                  <InputLabel for="titulo" value="Título" required />
+                  <InputLabel for="titulo" value="Título" class="text-gray-900 dark:text-white" required />
                   <TextInput
                     id="titulo"
                     type="text"
@@ -45,7 +45,7 @@
 
                 <!-- Descrição -->
                 <div class="col-span-1 md:col-span-2">
-                  <InputLabel for="descricao" value="Descrição" />
+                  <InputLabel for="descricao" value="Descrição" class="text-gray-900 dark:text-white"/>
                   <textarea
                     id="descricao"
                     class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
@@ -57,7 +57,7 @@
 
                 <!-- Estado -->
                 <div>
-                  <InputLabel for="estado" value="Estado" required />
+                  <InputLabel for="estado" value="Estado" class="text-gray-900 dark:text-white" required />
                   <SelectInput
                     id="estado"
                     class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
@@ -74,7 +74,7 @@
 
                 <!-- Prioridade -->
                 <div>
-                  <InputLabel for="prioridade" value="Prioridade" required />
+                  <InputLabel for="prioridade" value="Prioridade" class="text-gray-900 dark:text-white" required />
                   <SelectInput
                     id="prioridade"
                     class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
@@ -91,7 +91,7 @@
 
                 <!-- Categoria -->
                 <div>
-                  <InputLabel for="categoria_id" value="Categoria" />
+                  <InputLabel for="categoria_id" value="Categoria" class="text-gray-900 dark:text-white" />
                   <div class="flex space-x-2">
                     <SelectInput
                       id="categoria_id"
@@ -118,7 +118,7 @@
 
                 <!-- Data de Conclusão -->
                 <div>
-                  <InputLabel for="data_conclusao" value="Data de Conclusão" />
+                  <InputLabel for="data_conclusao" value="Data de Conclusão" class="text-gray-900 dark:text-white" />
                   <TextInput
                     id="data_conclusao"
                     type="datetime-local"

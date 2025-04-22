@@ -132,7 +132,12 @@ class DashboardController extends Controller
             $dataFormatada = $data->format('d/m');
             
             $pendentes = Tarefa::where('utilizador_id', $userId)
-                ->whereIn('estado', ['pendente', 'em_progresso'])
+                ->where('estado', 'pendente')
+                ->whereDate('created_at', '<=', $data)
+                ->count();
+            
+            $emProgresso = Tarefa::where('utilizador_id', $userId)
+                ->where('estado', 'em_progresso')
                 ->whereDate('created_at', '<=', $data)
                 ->count();
             
@@ -144,6 +149,7 @@ class DashboardController extends Controller
             $tendencia[] = [
                 'data' => $dataFormatada,
                 'pendentes' => $pendentes,
+                'em_progresso' => $emProgresso,
                 'concluidas' => $concluidas
             ];
         }
