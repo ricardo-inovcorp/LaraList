@@ -99,7 +99,7 @@
                       v-model="form.categoria_id"
                     >
                       <option :value="null">Sem categoria</option>
-                      <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+                      <option v-for="categoria in categoriasList" :key="categoria.id" :value="categoria.id">
                         {{ categoria.nome }}
                       </option>
                     </SelectInput>
@@ -156,17 +156,34 @@
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 tracking-tight">Adicionar Nova Categoria</h2>
         <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Adicione uma nova categoria para melhor organizar suas tarefas.</p>
         
-        <div>
-          <InputLabel for="nova_categoria_nome" value="Nome da Categoria" />
-          <TextInput
-            id="nova_categoria_nome"
-            type="text"
-            class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
-            v-model="novaCategoria.nome"
-            ref="novaCategoriaInput"
-            @keyup.enter="criarCategoria"
-          />
-          <InputError class="mt-2" :message="novaCategoria.erro" />
+        <div class="space-y-4">
+          <div>
+            <InputLabel for="nova_categoria_nome" value="Nome da Categoria" />
+            <TextInput
+              id="nova_categoria_nome"
+              type="text"
+              class="mt-1 block w-full bg-white dark:bg-white/5 border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-gray-900 dark:text-white"
+              v-model="novaCategoria.nome"
+              ref="novaCategoriaInput"
+              @keyup.enter="criarCategoria"
+            />
+            <InputError class="mt-2" :message="novaCategoria.erro" />
+          </div>
+
+          <div>
+            <InputLabel for="nova_categoria_cor" value="Cor da Categoria" />
+            <div class="flex items-center space-x-2 mt-1">
+              <input
+                id="nova_categoria_cor"
+                type="color"
+                class="h-10 w-20 rounded border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500"
+                v-model="novaCategoria.cor"
+              />
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                {{ novaCategoria.cor }}
+              </span>
+            </div>
+          </div>
         </div>
         
         <div class="flex justify-end mt-6 space-x-3">
@@ -200,8 +217,14 @@ import Modal from '@/components/Modal.vue';
 import axios from 'axios';
 
 const props = defineProps({
-  categorias: Array,
+  categorias: {
+    type: Array,
+    default: () => [],
+  },
 });
+
+// Lista reativa de categorias
+const categoriasList = ref([...props.categorias]);
 
 // Form para criação da tarefa
 const form = useForm({
@@ -218,6 +241,7 @@ const novaCategoriaInput = ref(null);
 const novaCategoria = ref({
   modal: false,
   nome: '',
+  cor: '#6366F1', // Cor padrão (indigo)
   erro: '',
   processando: false,
 });
@@ -234,16 +258,18 @@ const criarCategoria = async () => {
 
   try {
     const response = await axios.post(route('api.categorias.store'), {
-      nome: novaCategoria.value.nome
+      nome: novaCategoria.value.nome,
+      cor: novaCategoria.value.cor
     });
 
-    // Adicionar a nova categoria à lista e selecionar
-    props.categorias.push(response.data);
+    // Adicionar a nova categoria à lista reativa e selecionar
+    categoriasList.value.push(response.data);
     form.categoria_id = response.data.id;
     
     // Fechar modal e limpar
     novaCategoria.value.modal = false;
     novaCategoria.value.nome = '';
+    novaCategoria.value.cor = '#6366F1'; // Resetar para a cor padrão
   } catch (error) {
     novaCategoria.value.erro = error.response?.data?.message || 'Erro ao criar categoria';
   } finally {

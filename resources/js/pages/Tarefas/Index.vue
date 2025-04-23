@@ -97,7 +97,12 @@
                     v-model="filtros.categoria_id"
                   >
                     <option value="">Todas</option>
-                    <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+                    <option 
+                      v-for="categoria in categorias" 
+                      :key="categoria.id" 
+                      :value="categoria.id"
+                      :style="{ color: categoria.cor }"
+                    >
                       {{ categoria.nome }}
                     </option>
                   </SelectInput>
@@ -294,9 +299,20 @@
                       </span>
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden lg:table-cell">
-                    <span v-if="tarefa.categoria">{{ tarefa.categoria.nome }}</span>
-                    <span v-else class="text-gray-500">-</span>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <span 
+                      v-if="tarefa.categoria" 
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      :style="{ 
+                        backgroundColor: tarefa.categoria.cor + '20',
+                        color: tarefa.categoria.cor,
+                        borderColor: tarefa.categoria.cor + '40',
+                        borderWidth: '1px'
+                      }"
+                    >
+                      {{ tarefa.categoria.nome }}
+                    </span>
+                    <span v-else class="text-gray-500 dark:text-gray-400">-</span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden lg:table-cell">
                     <span v-if="tarefa.data_conclusao">{{ formatDate(tarefa.data_conclusao) }}</span>
@@ -483,12 +499,8 @@ const excluirTarefa = (tarefa) => {
 
 const confirmarExclusao = () => {
   confirmModal.value.processando = true;
+  confirmModal.value.show = false;
   
-  router.delete(route('tarefas.destroy', confirmModal.value.tarefa.id), {}, {
-    onSuccess: () => {
-      confirmModal.value.show = false;
-      confirmModal.value.processando = false;
-    },
-  });
+  router.delete(route('tarefas.destroy', confirmModal.value.tarefa.id));
 };
 </script> 

@@ -51,5 +51,8 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+        
+        <!-- PayPal SDK -->
+        <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID', '') }}&currency=BRL"></script>
     </body>
 </html>

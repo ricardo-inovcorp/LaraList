@@ -42,10 +42,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Start a free trial for the new user
+        $user->startFreeTrial();
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        return to_route('dashboard');
+        return to_route('tarefas.index')->with('message', 'Bem-vindo! Você tem 14 dias de acesso gratuito a todas as funcionalidades.');
     }
 }

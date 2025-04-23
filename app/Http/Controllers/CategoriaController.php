@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class CategoriaController extends Controller
 {
@@ -21,36 +21,78 @@ class CategoriaController extends Controller
     /**
      * Retorna todas as categorias do usuário autenticado.
      */
-    public function index(): JsonResponse
+    public function index()
     {
-        $categorias = Categoria::where('utilizador_id', Auth::id())->get();
-        
-        return response()->json($categorias);
+        $categorias = Auth::user()->categorias()
+            ->withCount('tarefas')
+            ->orderBy('nome')
+            ->get();
+
+        return Inertia::render('Categorias/Index', [
+            'categorias' => $categorias
+        ]);
     }
 
     /**
      * Armazena uma nova categoria criada pelo usuário.
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'nome' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('categorias')->where(function ($query) {
-                    return $query->where('utilizador_id', Auth::id());
-                }),
+                Rule::unique('categorias')->where(fn ($query) => 
+                    $query->where('utilizador_id', Auth::id())
+                ),
             ],
-            'cor' => 'nullable|string|max:30',
+            'cor' => 'nullable|string|max:7',
         ]);
 
-        $categoria = Categoria::create([
+        $categoria = Auth::user()->categorias()->create([
             'nome' => $validated['nome'],
             'cor' => $validated['cor'] ?? '#6366F1', // Cor padrão (indigo)
-            'utilizador_id' => Auth::id(),
         ]);
 
-        return response()->json($categoria, 201);
+        if ($request->wantsJson()) {
+            return response()->json($categoria);
+        }
+
+        return back()->with('success', 'Categoria criada com sucesso!');
+    }
+
+    public function update(Request $request, Categoria $categoria)
+    {
+        if ($categoria->utilizador_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'nome' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('categorias')
+                    ->where(fn ($query) => $query->where('utilizador_id', Auth::id()))
+                    ->ignore($categoria->id),
+            ],
+            'cor' => 'nullable|string|max:7',
+        ]);
+
+        $categoria->update($validated);
+
+        return back()->with('success', 'Categoria atualizada com sucesso!');
+    }
+
+    public function destroy(Categoria $categoria)
+    {
+        if ($categoria->utilizador_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $categoria->delete();
+
+        return back()->with('success', 'Categoria excluída com sucesso!');
     }
 }
