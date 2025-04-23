@@ -384,6 +384,14 @@ watch(periodoSelecionado, () => {
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="py-8">
       <div class="mx-auto max-w-7xl">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
+            <span class="bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
+              LaraList Pro
+            </span>
+          </h2>
+          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Gerencie suas tarefas e organize seu trabalho.</p>
+        </div>
         <!-- Cabeçalho do Dashboard -->
         <div class="mb-8">
           <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">
