@@ -47,12 +47,11 @@ class CategoriaController extends Controller
                     $query->where('utilizador_id', Auth::id())
                 ),
             ],
-            'cor' => 'nullable|string|max:7',
         ]);
 
         $categoria = Auth::user()->categorias()->create([
             'nome' => $validated['nome'],
-            'cor' => $validated['cor'] ?? '#6366F1', // Cor padrão (indigo)
+            'cor' => '#6B7280', // Cor cinza padrão
         ]);
 
         if ($request->wantsJson()) {

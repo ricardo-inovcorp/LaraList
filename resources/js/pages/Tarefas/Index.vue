@@ -302,13 +302,7 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <span 
                       v-if="tarefa.categoria" 
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                      :style="{ 
-                        backgroundColor: tarefa.categoria.cor + '20',
-                        color: tarefa.categoria.cor,
-                        borderColor: tarefa.categoria.cor + '40',
-                        borderWidth: '1px'
-                      }"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200 dark:bg-gray-800/50 dark:text-gray-300 dark:border-gray-700"
                     >
                       {{ tarefa.categoria.nome }}
                     </span>

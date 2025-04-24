@@ -169,21 +169,6 @@
             />
             <InputError class="mt-2" :message="novaCategoria.erro" />
           </div>
-
-          <div>
-            <InputLabel for="nova_categoria_cor" value="Cor da Categoria" />
-            <div class="flex items-center space-x-2 mt-1">
-              <input
-                id="nova_categoria_cor"
-                type="color"
-                class="h-10 w-20 rounded border-gray-300 dark:border-white/20 focus:border-indigo-500 focus:ring-indigo-500"
-                v-model="novaCategoria.cor"
-              />
-              <span class="text-sm text-gray-600 dark:text-gray-400">
-                {{ novaCategoria.cor }}
-              </span>
-            </div>
-          </div>
         </div>
         
         <div class="flex justify-end mt-6 space-x-3">
@@ -241,7 +226,6 @@ const novaCategoriaInput = ref(null);
 const novaCategoria = ref({
   modal: false,
   nome: '',
-  cor: '#6366F1', // Cor padrão (indigo)
   erro: '',
   processando: false,
 });
@@ -258,8 +242,7 @@ const criarCategoria = async () => {
 
   try {
     const response = await axios.post(route('api.categorias.store'), {
-      nome: novaCategoria.value.nome,
-      cor: novaCategoria.value.cor
+      nome: novaCategoria.value.nome
     });
 
     // Adicionar a nova categoria à lista reativa e selecionar
@@ -269,7 +252,6 @@ const criarCategoria = async () => {
     // Fechar modal e limpar
     novaCategoria.value.modal = false;
     novaCategoria.value.nome = '';
-    novaCategoria.value.cor = '#6366F1'; // Resetar para a cor padrão
   } catch (error) {
     novaCategoria.value.erro = error.response?.data?.message || 'Erro ao criar categoria';
   } finally {
