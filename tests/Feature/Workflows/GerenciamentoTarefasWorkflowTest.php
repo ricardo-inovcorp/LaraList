@@ -10,6 +10,7 @@ use App\Notifications\TarefaAtividadeNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
+use App\Models\Subscription;
 
 class GerenciamentoTarefasWorkflowTest extends TestCase
 {
@@ -28,6 +29,14 @@ class GerenciamentoTarefasWorkflowTest extends TestCase
         ]);
         
         $this->actingAs($user);
+        
+        // Criar subscrição ativa para o usuário
+        Subscription::create([
+            'user_id' => $user->id,
+            'plan_type' => 'free',
+            'is_active' => true,
+            'trial_ends_at' => now()->addDays(14),
+        ]);
         
         // 3. Criar categoria
         $categoria = Categoria::factory()->create([

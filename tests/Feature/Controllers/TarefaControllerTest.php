@@ -10,6 +10,7 @@ use App\Notifications\TarefaAtividadeNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
+use App\Models\Subscription;
 
 class TarefaControllerTest extends TestCase
 {
@@ -33,6 +34,14 @@ class TarefaControllerTest extends TestCase
         
         // Fake notifications para evitar envio real
         Notification::fake();
+        
+        // Criar subscrição ativa para o usuário
+        Subscription::create([
+            'user_id' => $this->user->id,
+            'plan_type' => 'free',
+            'is_active' => true,
+            'trial_ends_at' => now()->addDays(14),
+        ]);
     }
     
     /** @test */
@@ -251,5 +260,64 @@ class TarefaControllerTest extends TestCase
         
         // Verificar se o acesso foi negado
         $response->assertStatus(403);
+    }
+    
+    /** @test */
+    public function usuario_sem_subscricao_nao_pode_acessar_tarefas()
+    {
+        // Remover subscrição do usuário
+        Subscription::where('user_id', $this->user->id)->delete();
+        
+        // Autenticar usuário
+        $this->actingAs($this->user);
+        
+        // Tentar acessar a listagem de tarefas
+        $response = $this->get(route('tarefas.index'));
+        
+        // Verificar se é redirecionado para página de subscrição
+        $response->assertRedirect(route('subscription.index'));
+    }
+    
+    /** @test */
+    public function usuario_com_subscricao_expirada_nao_pode_acessar_tarefas()
+    {
+        // Atualizar subscrição para expirada
+        Subscription::where('user_id', $this->user->id)->update([
+            'is_active' => false,
+            'trial_ends_at' => now()->subDays(1),
+            'subscription_ends_at' => now()->subDays(1)
+        ]);
+        
+        // Autenticar usuário
+        $this->actingAs($this->user);
+        
+        // Tentar acessar a listagem de tarefas
+        $response = $this->get(route('tarefas.index'));
+        
+        // Verificar se é redirecionado para página de subscrição
+        $response->assertRedirect(route('subscription.index'));
+    }
+    
+    /** @test */
+    public function usuario_em_trial_pode_acessar_tarefas()
+    {
+        // Atualizar subscrição para período de trial
+        Subscription::where('user_id', $this->user->id)->update([
+            'is_active' => true,
+            'trial_ends_at' => now()->addDays(7),
+            'subscription_ends_at' => null
+        ]);
+        
+        // Autenticar usuário
+        $this->actingAs($this->user);
+        
+        // Tentar acessar a listagem de tarefas
+        $response = $this->get(route('tarefas.index'));
+        
+        // Verificar se consegue acessar normalmente
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => 
+            $page->component('Tarefas/Index')
+        );
     }
 }

@@ -18,11 +18,6 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('tarefas.index');
     })->name('home');
     
-    // Rotas básicas acessíveis a todos usuários autenticados
-    Route::get('/tarefas', [TarefaController::class, 'index'])->name('tarefas.index');
-    Route::get('/tarefas/create', [TarefaController::class, 'create'])->name('tarefas.create');
-    Route::post('/tarefas', [TarefaController::class, 'store'])->name('tarefas.store');
-    
     // Dashboard route (acessível para todos usuários autenticados)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -31,6 +26,9 @@ Route::middleware('auth')->group(function () {
     
     // Rotas que exigem assinatura ativa ou período de avaliação
     Route::middleware(CheckSubscription::class)->group(function () {
+        Route::get('/tarefas', [TarefaController::class, 'index'])->name('tarefas.index');
+        Route::get('/tarefas/create', [TarefaController::class, 'create'])->name('tarefas.create');
+        Route::post('/tarefas', [TarefaController::class, 'store'])->name('tarefas.store');
         Route::get('/tarefas/{tarefa}', [TarefaController::class, 'show'])->name('tarefas.show');
         Route::get('/tarefas/{tarefa}/edit', [TarefaController::class, 'edit'])->name('tarefas.edit');
         Route::put('/tarefas/{tarefa}', [TarefaController::class, 'update'])->name('tarefas.update');
