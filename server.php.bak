@@ -1,0 +1,85 @@
+<?php
+
+// Configurações SSL
+$context = stream_context_create([
+    'ssl' => [
+        'local_cert' => __DIR__ . '/storage/certs/cert.pem',
+        'local_pk' => __DIR__ . '/storage/certs/key.pem',
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true,
+    ]
+]);
+
+// Inicia o servidor web embutido
+$host = '0.0.0.0';
+$port = 8000;
+$base = __DIR__ . '/public';
+
+echo "Servidor Laravel com SSL rodando em https://localhost:{$port}\n";
+echo "Para o emulador Android, use: https://10.0.2.2:{$port}\n";
+echo "Pressione Ctrl+C para sair.\n\n";
+
+// Função para manipular as requisições
+$router = function ($uri) use ($base) {
+    $script = $base . $uri;
+    
+    if (is_dir($script)) {
+        if (file_exists($script . '/index.php')) {
+            $script = $script . '/index.php';
+        } else {
+            return false;
+        }
+    } else if (file_exists($script . '.php')) {
+        $script = $script . '.php';
+    }
+    
+    if (file_exists($script) && is_file($script)) {
+        require $script;
+        return true;
+    }
+    
+    return false;
+};
+
+// Inicia o servidor com SSL
+$socket = stream_socket_server(
+    "ssl://{$host}:{$port}",
+    $errno,
+    $errstr,
+    STREAM_SERVER_BIND|STREAM_SERVER_LISTEN,
+    $context
+);
+
+if (!$socket) {
+    echo "Erro: $errstr ($errno)\n";
+    exit(1);
+}
+
+// Roda até Ctrl+C ser pressionado
+while ($conn = stream_socket_accept($socket, -1)) {
+    // Lê a requisição
+    $request = '';
+    while (($line = fgets($conn)) !== false) {
+        $request .= $line;
+        if ($line === "\r\n") {
+            break;
+        }
+    }
+    
+    // Extrai o URI da requisição
+    preg_match('/GET (.*?) HTTP/', $request, $matches);
+    $uri = $matches[1] ?? '/';
+    
+    // Verifica se o roteador pode manipular esta requisição
+    $handled = $router($uri);
+    
+    // Se não foi manipulado, tenta o index.php
+    if (!$handled) {
+        $router('/index.php');
+    }
+    
+    fclose($conn);
+}
+
+fclose($socket); 

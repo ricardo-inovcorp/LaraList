@@ -6,6 +6,20 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import { registerSW } from 'virtual:pwa-register';
+
+// Registrar o service worker para PWA
+const updateSW = registerSW({
+  onNeedRefresh() {
+    // Podemos mostrar um diálogo para atualização da aplicação aqui
+    console.log('Nova versão disponível!');
+    // Automática para simplificar a experiência
+    updateSW();
+  },
+  onOfflineReady() {
+    console.log('Aplicação pronta para uso offline');
+  }
+});
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
